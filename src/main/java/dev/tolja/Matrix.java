@@ -98,18 +98,29 @@ public class Matrix implements MatrixOperations {
     }
 
     @Override
-    public Matrix add(Matrix b) {
-        return add(this, b);
+    public void add(Matrix b) {
+        if (!areMatrixDimensionsMatched(this, b)) {
+            throw new IllegalArgumentException("The dimensions of the two matrices do not match!");
+        }
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                this.setElement(i,j,this.matrix[i][j] + b.matrix[i][j]);
+            }
+        }
     }
 
     @Override
-    public Matrix subtract(Matrix b) {
-        return subtract(this, b);
-    }
+    public void subtract(Matrix b) {
+        if (!areMatrixDimensionsMatched(this, b)) {
+            throw new IllegalArgumentException("The dimensions of the two matrices do not match!");
+        }
 
-    @Override
-    public Matrix multiply(Matrix b) {
-        return multiply(this, b);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                this.setElement(i,j,this.matrix[i][j] - b.matrix[i][j]);
+            }
+        }
     }
 
     private void validateMatrixDimensions(double[][] matrix) {
