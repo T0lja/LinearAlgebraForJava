@@ -55,6 +55,25 @@ public class Matrix implements MatrixOperations {
         return result;
     }
 
+    public static Matrix zeros(int rows, int cols) {
+        return new Matrix(rows, cols);
+    }
+
+    public static Matrix random(int rows, int cols) {
+        Matrix result = new Matrix(rows, cols);
+        result.FillWithRandomNumbers();
+        return result;
+    }
+
+    public static Matrix identity(int size) {
+        Matrix result = new Matrix(size, size);
+        for (int i = 0; i < size; i++) {
+            result.setElement(i, i, 1);
+        }
+        return result;
+    }
+
+    @Override
     public void transpose() {
         Matrix tempMatrix = new Matrix(this.matrix);
         for (int i = 0; i < rows; i++) {
@@ -64,14 +83,26 @@ public class Matrix implements MatrixOperations {
         }
     }
 
+    @Override
+    public void FillWithRandomNumbers() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                this.setElement(i,j,Math.random());
+            }
+        }
+    }
+
+    @Override
     public double getElement(int row, int col) {
         return matrix[row][col];
     }
 
+    @Override
     public void setElement(int row, int col, double value) {
         this.matrix[row][col] = value;
     }
 
+    @Override
     public void printMatrix() {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
