@@ -27,6 +27,56 @@ public class Matrix implements MatrixOperations {
         }
     }
 
+    public static double[] solveLinearEquation(Matrix A, double[] b) {
+        if (A.rows != A.cols || A.rows != b.length) {
+            throw new IllegalArgumentException("Matrix A must be square and compatible with vector b.");
+        }
+
+        int n = A.rows;
+        Matrix augmentedMatrix = new Matrix(n, n + 1);
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                augmentedMatrix.setElement(i, j, A.getElement(i, j));
+            }
+            augmentedMatrix.setElement(i, n, b[i]);
+        }
+
+        for (int i = 0; i < n; i++) {
+            int maxRowIndex = i;
+            for (int k = i + 1; k < n; k++) {
+                if (Math.abs(augmentedMatrix.getElement(k, i)) > Math.abs(augmentedMatrix.getElement(maxRowIndex, i))) {
+                    maxRowIndex = k;
+                }
+            }
+            augmentedMatrix.swapRows(i, maxRowIndex);
+
+            for (int k = i + 1; k < n; k++) {
+                double factor = augmentedMatrix.getElement(k, i) / augmentedMatrix.getElement(i, i);
+                for (int j = i; j < n + 1; j++) {
+                    augmentedMatrix.setElement(k, j, augmentedMatrix.getElement(k, j) - factor * augmentedMatrix.getElement(i, j));
+                }
+            }
+        }
+
+        double[] x = new double[n];
+        for (int i = n - 1; i >= 0; i--) {
+            double sum = 0.0;
+            for (int j = i + 1; j < n; j++) {
+                sum += augmentedMatrix.getElement(i, j) * x[j];
+            }
+            x[i] = (augmentedMatrix.getElement(i, n) - sum) / augmentedMatrix.getElement(i, i);
+        }
+
+        return x;
+    }
+
+    private void swapRows(int i, int j) {
+        double[] temp = matrix[i];
+        matrix[i] = matrix[j];
+        matrix[j] = temp;
+    }
+
     public static Matrix add(Matrix a, Matrix b) {
         if (!areMatrixDimensionsMatched(a, b)) {
             throw new IllegalArgumentException("The dimensions of the two matrices do not match!");
